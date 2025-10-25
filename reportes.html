@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Reporte Académico</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <link rel="stylesheet" href="styles/styles_reportes.css">
+</head>
+<body>
+
+  <h1>Generador de Reporte Académico</h1>
+  <div class="formulario">
+    <input type="text" id="nombre" placeholder="Nombre del estudiante" oninput="actualizar()">
+    <input type="text" id="curso" placeholder="Curso" oninput="actualizar()">
+    <input type="date" id="fecha" oninput="actualizar()">
+    <br>
+    <input type="text" id="nota1" placeholder="Nota Unidad 1" oninput="actualizar()">
+    <input type="text" id="nota2" placeholder="Nota Unidad 2" oninput="actualizar()">
+    <input type="text" id="nota3" placeholder="Nota Unidad 3" oninput="actualizar()">
+    <br>
+    <button onclick="descargarPDF()">Descargar PDF</button>
+  </div>
+
+  <div id="reporte">
+     <img src="img/LogoNav.jpg" alt="Logotipo ClassHub" class="logo-reporte">
+    <h2>Reporte Académico</h2>
+    <div class="reporte-info">
+      <p><strong>Nombre:</strong> <span id="nombre-out">---</span></p>
+      <p><strong>Curso:</strong> <span id="curso-out">---</span></p>
+      <p><strong>Fecha:</strong> <span id="fecha-out">---</span></p>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Unidad</th>
+          <th>Evaluación</th>
+          <th>Nota</th>
+          <th>Observaciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Unidad 1</td>
+          <td>Parcial</td>
+          <td id="nota1-out">---</td>
+          <td>Buen desempeño</td>
+        </tr>
+        <tr>
+          <td>Unidad 2</td>
+          <td>Proyecto</td>
+          <td id="nota2-out">---</td>
+          <td>Excelente trabajo</td>
+        </tr>
+        <tr>
+          <td>Unidad 3</td>
+          <td>Examen Final</td>
+          <td id="nota3-out">---</td>
+          <td>Puede mejorar</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="footer">
+      <p>Reporte generado por ClassHub – DigitalClass Systems</p>
+      <p>© 2025 Todos los derechos reservados</p>
+    </div>
+  </div>
+
+  <script>
+    function actualizar() {
+      document.getElementById('nombre-out').textContent = document.getElementById('nombre').value || '---';
+      document.getElementById('curso-out').textContent = document.getElementById('curso').value || '---';
+      document.getElementById('fecha-out').textContent = document.getElementById('fecha').value || '---';
+      document.getElementById('nota1-out').textContent = document.getElementById('nota1').value || '---';
+      document.getElementById('nota2-out').textContent = document.getElementById('nota2').value || '---';
+      document.getElementById('nota3-out').textContent = document.getElementById('nota3').value || '---';
+    }
+
+    function descargarPDF() {
+      const elemento = document.getElementById('reporte');
+      const opciones = {
+        margin: 0.5,
+        filename: 'reporte_academico.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+      html2pdf().set(opciones).from(elemento).save();
+    }
+  </script>
+
+</body>
+</html>

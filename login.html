@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ClassHub | Inicio de Sesión</title>
+  <link rel="stylesheet" href="styles/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+</head>
+<body class="login-body">
+  <div class="login-container">
+    <h1>DigitalClass Systems</h1>
+    <img src="img/Logo.png" alt="Logotipo de ClassHub" class="logo-login">
+    <p class="subtitle">Sistema Académico – Prototipo Visual</p>
+
+    <form class="login-form">
+      <label for="usuario">Usuario:</label>
+      <input type="text" id="usuario" name="usuario" placeholder="Ingrese su usuario" required>
+
+      <label for="clave">Contraseña:</label>
+      <input type="password" id="clave" name="clave" placeholder="Ingrese su contraseña" required>
+
+      <label for="rol">Rol:</label>
+      <select id="rol" name="rol" required>
+        <option value="" disabled selected>Seleccione su rol</option>
+        <option value="estudiante">Estudiante</option>
+        <option value="profesor">Profesor</option>
+      </select>
+
+      <button type="submit">Ingresar</button>
+    </form>
+
+    <footer>
+      <p>© 2025 DigitalClass Systems</p>
+    </footer>
+  </div>
+
+  <script>
+    document.querySelector('.login-form').addEventListener('submit', function(e) {
+      e.preventDefault(); 
+      window.location.href = 'dashboard.html'; 
+    });
+  </script>
+</body>
+</html>

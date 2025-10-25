@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ClassHub | Matrícula de Alumnos</title>
+  <link rel="stylesheet" href="styles/styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+</head>
+<body class="dashboard-body">
+  <div class="sidebar">
+    <div class="logo-nav-container">
+      <img src="img/LogoNav.jpg" alt="Logo ClassHub" class="logo-nav">
+    </div>
+    <h2>ClassHub</h2>
+    <nav class="nav-menu">
+      <ul>
+        <li><a href="dashboard.html">Inicio</a></li>
+        <li><a href="matricula.html" class="active">Matrícula</a></li>
+        <li><a href="consulta.html">Consultar Material</a></li>
+        <li><a href="autores.html">Autores</a></li>
+        <li><a href="login.html">Cerrar Sesión</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="main-content">
+    <h1>Formulario de Matrícula</h1>
+    <form class="form-publicacion">
+      <label for="nombre">Nombre completo</label>
+      <input type="text" id="nombre" name="nombre" placeholder="Ej. Ana López" required>
+
+      <label for="identidad">Número de Identidad</label>
+      <input type="text" id="identidad" name="identidad" placeholder="Ej. 0801-2000-12345" required>
+
+      <label for="fecha-nacimiento">Fecha de nacimiento</label>
+      <input type="date" id="fecha-nacimiento" name="fecha-nacimiento" required>
+
+      <label for="grado">Grado a matricular</label>
+      <select id="grado" name="grado" required>
+        <option value="">Seleccione un grado</option>
+        <option value="1">1° Grado</option>
+        <option value="2">2° Grado</option>
+        <option value="3">3° Grado</option>
+        <option value="4">4° Grado</option>
+        <option value="5">5° Grado</option>
+        <option value="6">6° Grado</option>
+      </select>
+
+      <label for="direccion">Dirección</label>
+      <textarea id="direccion" name="direccion" rows="3" placeholder="Ej. Colonia Los Pinos, San Pedro Sula" required></textarea>
+
+      <label for="responsable">Nombre del encargado</label>
+      <input type="text" id="responsable" name="responsable" placeholder="Ej. María Rodríguez" required>
+
+      <label for="telefono">Teléfono de contacto</label>
+      <input type="text" id="telefono" name="telefono" placeholder="Ej. +504 9999-8888" required>
+
+      <div class="botones-formulario">
+        <button type="submit">Matricular</button>
+        <button type="reset" class="btn-secundario">Limpiar</button>
+        <a href="dashboard.html" class="btn-secundario">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

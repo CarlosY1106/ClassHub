@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ClassHub | Consulta de Materiales</title>
+  <link rel="stylesheet" href="styles/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+</head>
+<body class="dashboard-body">
+  <div class="sidebar">
+    <div class="logo-nav-container">
+      <img src="img/LogoNav.jpg" alt="Logo ClassHub" class="logo-nav">
+    </div>
+    <h2>ClassHub</h2>
+    <nav class="nav-menu">
+      <ul>
+        <li><a href="dashboard.html">Inicio</a></li>
+        <li><a href="publicacion.html">Publicar Material</a></li>
+        <li><a href="consulta.html" class="active">Consultar Material</a></li>
+        <li><a href="autores.html">Autores</a></li> 
+        <li><a href="login.html">Cerrar Sesión</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="main-content">
+    <h1>Materiales Académicos Disponibles</h1>
+    <p>Consulta los recursos publicados por docentes, organizados por curso y fecha.</p>
+
+    <div class="filtro-materiales">
+      <label for="filtro">Filtrar por curso:</label>
+      <select id="filtro" name="filtro">
+        <option value="">Todos</option>
+        <option value="fisica">Física</option>
+        <option value="matematicas">Matemáticas</option>
+        <option value="historia">Historia</option>
+        <option value="lenguaje">Lenguaje</option>
+        <option value="tecnologia">Tecnología</option>
+      </select>
+    </div>
+
+    <table class="tabla-materiales">
+      <thead>
+        <tr>
+          <th>Título</th>
+          <th>Curso</th>
+          <th>Tipo</th>
+          <th>Docente</th>
+          <th>Fecha</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Guía de Física – Movimiento Rectilíneo</td>
+          <td>Física</td>
+          <td>Guía</td>
+          <td>Prof. Martínez</td>
+          <td>15/10/2025</td>
+          <td><a href="#" class="btn-tabla">Ver</a></td>
+        </tr>
+        <tr>
+          <td>Resumen de Historia – Revolución Francesa</td>
+          <td>Historia</td>
+          <td>Resumen</td>
+          <td>Lic. Gómez</td>
+          <td>12/10/2025</td>
+          <td><a href="#" class="btn-tabla">Ver</a></td>
+        </tr>
+        <tr>
+          <td>Ejercicios de Cálculo – Derivadas</td>
+          <td>Matemáticas</td>
+          <td>Ejercicios</td>
+          <td>Ing. Rivera</td>
+          <td>10/10/2025</td>
+          <td><a href="#" class="btn-tabla">Ver</a></td>
+        </tr>
+        <tr>
+          <td>Presentación – Introducción a la Tecnología</td>
+          <td>Tecnología</td>
+          <td>Presentación</td>
+          <td>Lic. Torres</td>
+          <td>08/10/2025</td>
+          <td><a href="#" class="btn-tabla">Ver</a></td>
+        </tr>
+        <tr>
+          <td>Tarea de Lenguaje – Análisis Literario</td>
+          <td>Lenguaje</td>
+          <td>Tarea</td>
+          <td>Prof. Salinas</td>
+          <td>06/10/2025</td>
+          <td><a href="#" class="btn-tabla">Ver</a></td>
+        </tr>
+        <tr>
+          <td>Guía de Matemáticas – Álgebra Básica</td>
+          <td>Matemáticas</td>
+          <td>Guía</td>
+          <td>Ing. Rivera</td>
+          <td>04/10/2025</td>
+          <td><a href="#" class="btn-tabla">Ver</a></td>
+        </tr>
+        <tr>
+          <td>Resumen de Física – Leyes de Newton</td>
+          <td>Física</td>
+          <td>Resumen</td>
+          <td>Prof. Martínez</td>
+          <td>02/10/2025</td>
+          <td><a href="#" class="btn-tabla">Ver</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

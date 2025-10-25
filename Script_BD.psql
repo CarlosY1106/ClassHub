@@ -1,0 +1,206 @@
+-- esquema opcional
+create schema if not exists school_auth;
+set search_path = school_auth, public;
+
+-- users: cuentas de autenticación/identidad
+create table if not exists users (
+  id uuid primary key default gen_random_uuid(),
+  username text not null unique,
+  email text not null unique,
+  password_hash text not null,
+  full_name text,
+  phone text,
+  is_active boolean not null default true,
+  last_login timestamptz,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  metadata jsonb default '{}'::jsonb
+);
+
+-- roles
+create table if not exists roles (
+  id int8 generated always as identity primary key,
+  name text not null unique,
+  description text
+);
+
+-- user_roles (m2m)
+create table if not exists user_roles (
+  id int8 generated always as identity primary key,
+  user_id uuid not null references users(id) on delete cascade,
+  role_id int8 not null references roles(id) on delete cascade,
+  assigned_at timestamptz not null default now(),
+  constraint user_role_unique unique (user_id, role_id)
+);
+
+-- students profile
+create table if not exists students (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null unique references users(id) on delete restrict,
+  student_number text not null unique,
+  birth_date date,
+  gender text,
+  enrolled_date date,
+  status text not null default 'active', -- active, graduated, inactive
+  grade_level text,
+  extra jsonb default '{}'::jsonb,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+-- teachers profile
+create table if not exists teachers (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null unique references users(id) on delete restrict,
+  employee_number text not null unique,
+  hire_date date,
+  bio text,
+  title text,
+  extra jsonb default '{}'::jsonb,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+-- academic terms
+create table if not exists academic_terms (
+  id int8 generated always as identity primary key,
+  code text not null unique, -- e.g. 2025-1
+  name text not null,
+  start_date date,
+  end_date date,
+  active boolean not null default true
+);
+
+-- classrooms (groups or physical/aula)
+create table if not exists classrooms (
+  id int8 generated always as identity primary key,
+  name text not null,
+  location text,
+  capacity int4,
+  metadata jsonb default '{}'::jsonb
+);
+
+-- courses
+create table if not exists courses (
+  id uuid primary key default gen_random_uuid(),
+  code text not null, -- e.g. MATH101
+  title text not null,
+  description text,
+  teacher_id uuid references teachers(id) on delete set null,
+  term_id int8 references academic_terms(id) on delete set null,
+  classroom_id int8 references classrooms(id) on delete set null,
+  capacity int4,
+  credits numeric(4,2) default 0,
+  visibility text not null default 'public', -- public, private
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  constraint course_code_term_unique unique (code, term_id)
+);
+
+-- enrollments (matrículas)
+create table if not exists enrollments (
+  id int8 generated always as identity primary key,
+  student_id uuid not null references students(id) on delete cascade,
+  course_id uuid not null references courses(id) on delete cascade,
+  enrolled_at timestamptz not null default now(),
+  status text not null default 'enrolled', -- enrolled, dropped, completed
+  grade numeric(5,2), -- opcional
+  remarks text,
+  constraint unique_student_course unique (student_id, course_id)
+);
+
+-- course_materials
+create table if not exists course_materials (
+  id uuid primary key default gen_random_uuid(),
+  course_id uuid not null references courses(id) on delete cascade,
+  uploaded_by uuid references teachers(id) on delete set null,
+  title text not null,
+  description text,
+  content text, -- texto o resumen
+  material_type text not null default 'document', -- document, video, link, assignment
+  visibility text not null default 'course', -- course, public, private
+  published_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  metadata jsonb default '{}'::jsonb
+);
+
+-- attachments (files/links asociados a materials)
+create table if not exists attachments (
+  id uuid primary key default gen_random_uuid(),
+  material_id uuid not null references course_materials(id) on delete cascade,
+  filename text,
+  url text not null,
+  mime_type text,
+  size_bytes int8,
+  uploaded_at timestamptz not null default now(),
+  metadata jsonb default '{}'::jsonb
+);
+
+-- material access logs (auditoría de accesos)
+create table if not exists material_access_logs (
+  id int8 generated always as identity primary key,
+  material_id uuid not null references course_materials(id) on delete cascade,
+  student_id uuid not null references students(id) on delete cascade,
+  accessed_at timestamptz not null default now(),
+  action text not null default 'view', -- view, download, submit
+  user_agent text,
+  ip inet
+);
+
+-- audit logs generales (acciones administrativas)
+create table if not exists audit_logs (
+  id int8 generated always as identity primary key,
+  actor_user_id uuid references users(id) on delete set null,
+  action text not null,
+  target_table text,
+  target_id text,
+  details jsonb default '{}'::jsonb,
+  created_at timestamptz not null default now()
+);
+
+-- índices sugeridos: (crear después de poblar datos)
+create index if not exists idx_users_email on users (email);
+create index if not exists idx_students_user on students (user_id);
+create index if not exists idx_teachers_user on teachers (user_id);
+create index if not exists idx_courses_teacher on courses (teacher_id);
+create index if not exists idx_enrollments_student on enrollments (student_id);
+create index if not exists idx_enrollments_course on enrollments (course_id);
+create index if not exists idx_materials_course on course_materials (course_id);
+create index if not exists idx_accesslogs_material on material_access_logs (material_id);
+create index if not exists idx_accesslogs_student on material_access_logs (student_id);
+
+-- triggers para mantener updated_at (ejemplo simple)
+create or replace function set_updated_at()
+returns trigger language plpgsql as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+create trigger trg_users_updated_at
+before update on users
+for each row execute function set_updated_at();
+
+create trigger trg_students_updated_at
+before update on students
+for each row execute function set_updated_at();
+
+create trigger trg_teachers_updated_at
+before update on teachers
+for each row execute function set_updated_at();
+
+create trigger trg_courses_updated_at
+before update on courses
+for each row execute function set_updated_at();
+
+create trigger trg_materials_updated_at
+before update on course_materials
+for each row execute function set_updated_at();
+
+-- datos iniciales de ejemplo: roles basicos
+insert into roles (name, description) values
+('admin','administrador del sistema') on conflict (name) do nothing,
+('teacher','docente') on conflict (name) do nothing,
+('student','estudiante') on conflict (name) do nothing,
+('registrar','administracion academica') on conflict (name) do nothing;
